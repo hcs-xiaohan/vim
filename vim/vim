@@ -1,0 +1,160 @@
+"......................................................
+"display
+".....................................................
+
+syntax on
+set cul
+set cuc
+"color desert
+color ron
+"autocmd InsertLeave * se nocul 
+set ruler
+set showcmd
+set helplang=cn
+set encoding=utf-8
+set autoindent
+set cindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smarttab
+set number
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+set cmdheight=2
+filetype on
+filetype indent on
+set viminfo+=!
+set iskeyword+=_,$,@,%,#,-
+
+nmap tt :%s/\t/    /g<CR>
+
+".........................................
+"key command
+".........................................
+
+"NERDTree map
+map <F3> :NERDTreeToggle<CR>
+imap <F3> <ESC> :NERDTreeToggle<CR>
+"C,C++ compiler
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+    exec "w"
+    if &filetype == 'c'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    ennif
+endfunc        
+"C,C++debug
+map <F8> :call Rungdb()<CR>
+func! Rungdb()
+        exec "w"
+        exec "!g++ % -g -o %<"
+        exec "!gdb ./%<"
+endfunc
+
+"...............................................
+"others set
+"...............................................
+
+autocmd vimenter * if !argc() | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+set autoread
+set autowrite
+set completeopt=preview,menu
+filetype plugin on
+set noeb
+set confirm
+set ignorecase
+set backspace=2
+set whichwrap+=<,>,h,l
+set showmatch
+set matchtime=1
+"auto completion
+inoremap ( ()<ESC>i
+inoremap ) <c-r>=ClosePair(')')<CR>
+inoremap { {<CR>}<ESC>O
+inoremap } <c-r>=ClosePair('}')<CR>
+inoremap [ []<ESC>i
+inoremap ] <c-r>=ClosePair(']')<CR>
+inoremap " ""<ESC>i
+inoremap ' ''<ESC>i
+function! ClosePair(char)
+  if getline('.')[col('.') - 1] == a:char
+      return "\<Right>"
+  else
+      return a:char
+  endif
+endfunction
+filetype plugin indent on 
+
+".......................................................
+"plugin set
+".......................................................
+
+"Taglist
+nmap <F4> :YcmDiags<CR>
+let Tlist_Auto_Open=1 
+let Tlist_Show_One_File = 1
+let Tlist_File_Fold_Auto_Close = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Use_Left_Window = 1
+"YouCompleteMe
+let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_seed_identifiers_with_syntax=1    
+set completeopt-=preview  
+let g:ycm_confirm_extra_conf=0  
+let g:ycm_cache_omnifunc=0
+let g:ycm_complete_in_comments=1
+let g:ycm_complete_in_strings = 1
+let g:ycm_min_num_of_chars_for_completion=1
+let g:ycm_use_ultisnips_completer=0 
+"Quickfix
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+
+
+
+".......................................................
+"vundle
+".......................................................
+
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+Bundle 'gmarik/vundle'
+
+"..................................
+"my Bundle here:
+"..................................
+
+" original repos on github
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tomasr/molokai'
+Bundle 'kien/ctrlp.vim'
+Bundle 'Yggdroot/indentLine'
+Bundle 'jiangmiao/auto-pairs'
+let g:indentLine_char = '┊'
+"..................................
+" vim-scripts repos
+"..................................
+Bundle 'taglist.vim'
+Bundle 'winmanager'
+"..................................
+" non github repos
+"..................................
+"..................................
+filetype plugin indent on
+
+
+
+let g:winManagerWindowLayout='FileExplorer|TagList'
+nmap wm :WMToggle<cr>
